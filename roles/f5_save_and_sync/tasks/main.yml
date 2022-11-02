@@ -1,0 +1,11 @@
+---
+- name: Get device groups
+  bigip_device_info:
+      provider: "{{ provider }}"
+      gather_subset:
+          - device-groups
+  register: device_groups_result
+
+- name: Set device_group_names fact
+  set_fact:
+      device_group_names: "{{ device_groups_result | json_query('device_groups[*].name') }}"

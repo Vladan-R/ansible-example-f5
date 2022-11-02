@@ -1,0 +1,98 @@
+---
+- name: Gather MGMT routes
+  f5networks.f5_modules.bigip_device_info:
+    provider: "{{ provider }}"
+    gather_subset:
+      - management-routes
+  register: mgmt_routes_devinfo_result
+
+- name: Display mgmt routes info
+  debug:
+    var: mgmt_routes_devinfo_result
+
+- name: Set facts mgmt routes
+  set_fact:
+    is_mgmt_route_present_already: "{{ mgmt_routes_devinfo_result | json_query(jq) }}"
+    mgmt_default_gateway: "{{ mgmt_routes_devinfo_result | json_query('management_routes[0].gateway') }}"
+  vars:
+    jq: "length(management_routes[?network=='{{ splunk_syslog_ip + '/32' }}'])"
+
+- name: Gather prechange include statement
+  f5networks.f5_modules.bigip_command:
+    provider: "{{ provider }}"
+    commands:
+      - list sys syslog include
+  register: prechange_sys_syslog_include
+
+- name: Add management route towards Splunk
+  f5networks.f5_modules.bigip_management_route:
+    provider: "{{ provider }}"
+    network: "{{ splunk_syslog_ip + '/32' }}"
+    gateway: "{{ mgmt_default_gateway }}"
+    name: "splunk_f5_{{ splunk_syslog_location }}"
+  register: add_mgmt_route_result
+  notify:
+    - Save the running configuration to disk
+  when: is_mgmt_route_present_already=="0"
+
+- name: Modify sys syslog include
+  f5networks.f5_modules.bigip_device_syslog:
+    include: |
+      options {
+          keep_hostname(yes);
+      };
+
+      destination splunk_f5_{{ splunk_syslog_location }} {
+          tcp({{ splunk_syslog_ip }} port ({{ splunk_syslog_port }}));
+      };
+
+      filter f_alllogs {
+          level (debug...emerg);
+      };
+
+      log {
+          source(s_syslog_pipe);
+          filter(f_alllogs);
+          destination(splunk_f5_{{ splunk_syslog_location }});
+      };
+    provider: "{{ provider }}"
+  register: modify_sys_syslog_include_result
+  notify:
+    - Save the running configuration to disk
+    - Sync configuration from device to group
+  when: failover_state == 'active'
+
+- name: Gather post-change include statement
+  f5networks.f5_modules.bigip_command:
+    provider: "{{ provider }}"
+    commands:
+      - list sys syslog include
+  register: postchange_sys_syslog_include
+
+- name: Display mgmt routes
+  debug:
+    var: mgmt_routes_devinfo_result
+
+- name: Display whether mgmt route for splunk listner is present already
+  debug:
+    var: is_mgmt_route_present_already
+
+- name: Display mgmt default gateway
+  debug:
+    var: mgmt_default_gateway
+
+- name: Display mgmt route addition change result
+  debug:
+      var: add_mgmt_route_result
+
+- name: Display pre-change sys syslog include
+  debug:
+    var: prechange_sys_syslog_include
+
+- name: Display sys syslog include change result
+  debug:
+      var: modify_sys_syslog_include_result
+
+- name: Display post-change sys syslog include
+  debug:
+    var: postchange_sys_syslog_include

@@ -1,0 +1,26 @@
+---
+#- name: Gather desired information
+#  bigip_device_info:
+#      provider: "{{ provider }}"
+#      gather_subset:
+#          - devices
+#          - system-info
+#  register: devinfo_result
+
+- name: precheck commands
+  bigip_command:
+      provider: "{{ provider }}"
+      commands:
+          - show sys cluster
+          - bash -c "tail -n 50 /var/log/ltm"
+          - show sys performance system
+          - show cm failover-status
+  register: commands_result
+
+#- name: Display devinfo result
+#  debug:
+#      var: devinfo_result
+
+- name: Display commands result
+  debug:
+      var: commands_result

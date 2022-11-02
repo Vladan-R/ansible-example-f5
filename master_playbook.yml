@@ -1,0 +1,31 @@
+---
+- name: Master Playbook
+  hosts: all
+  connection: local
+  gather_facts: False
+  vars:
+      splunk_syslog_ip: 10.100.10.10
+      splunk_syslog_port: 6543
+      provider:
+          password: "{{ bigip_ssh_pass }}"
+          server: 127.0.0.1
+          server_port: "{{ ansible_host | replace('.', '') | int % 55000 + 10000 }}"
+          user: "{{ bigip_user }}"
+          validate_certs: no
+
+  pre_tasks:
+    - name: Open tunnel
+      ansible.builtin.shell:
+          cmd: ssh -f -N -M -S /tmp/session"{{ provider['server_port'] }}" -L "{{ provider['server_port'] }}":"{{ ansible_host }}":443 -i ~/.ssh/user_nopass user@10.10.10.15 cat -
+  
+  roles:
+    - f5_pre_post_checks
+    - f5_determine_active
+    - CHG123456_setup_syslog_to_splunk
+    - f5_save_and_sync
+    - f5_pre_post_checks
+
+  post_tasks:
+    - name: Close tunnel
+      ansible.builtin.shell:
+          cmd: ssh -S /tmp/session"{{ provider['server_port'] }}" -O exit user@10.10.10.15

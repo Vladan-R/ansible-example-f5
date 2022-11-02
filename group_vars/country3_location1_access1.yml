@@ -1,0 +1,5 @@
+bigip_user: admin
+bigip_ssh_pass: password1
+splunk_syslog_ip: 10.101.10.11
+splunk_syslog_port: 5432
+splunk_syslog_location: dc2

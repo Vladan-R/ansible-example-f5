@@ -1,0 +1,105 @@
+---
+all:
+  children:
+    country1_location3:
+      hosts:
+        country1_location3_f5_001:
+          ansible_host: 10.13.100.11
+        country1_location3_f5_002:
+          ansible_host: 10.13.100.12
+        country1_location3_f5_003:
+          ansible_host: 10.13.100.13
+        country1_location3_f5_004:
+          ansible_host: 10.13.100.14
+    country1_location2:
+      hosts:
+        country1_location2_f5_001:
+          ansible_host: 10.12.100.11
+        country1_location2_f5_002:
+          ansible_host: 10.12.100.12
+        country1_location2_f5_003:
+          ansible_host: 10.12.100.13
+        country1_location2_f5_004:
+          ansible_host: 10.12.100.14
+        country1_location2_f5_005:
+          ansible_host: 10.12.100.15
+        country1_location2_f5_006:
+          ansible_host: 10.12.100.16
+        country1_location2_f5_007:
+          ansible_host: 10.12.100.17
+        country1_location2_f5_008:
+          ansible_host: 10.12.100.18
+    country1_location1:
+      hosts:
+        country1_location1_f5_001:
+          ansible_host: 10.11.100.11
+        country1_location1_f5_002:
+          ansible_host: 10.11.100.12
+        country1_location1_f5_003:
+          ansible_host: 10.11.100.13
+        country1_location1_f5_004:
+          ansible_host: 10.11.100.14
+    country2_location1:
+      hosts:
+        country2_location1_f5_001:
+          ansible_host: 10.21.100.11
+        country2_location1_f5_002:
+          ansible_host: 10.21.100.12
+        country2_location1_f5_003:
+          ansible_host: 10.21.100.13
+        country2_location1_f5_004:
+          ansible_host: 10.21.100.14
+        country2_location1_f5_005:
+          ansible_host: 10.21.100.15
+        country2_location1_f5_006:
+          ansible_host: 10.21.100.16
+        country2_location1_f5_007:
+          ansible_host: 10.21.100.17
+        country2_location1_f5_008:
+          ansible_host: 10.21.100.18
+        country2_location1_f5_009:
+          ansible_host: 10.21.100.19
+        country2_location1_f5_010:
+          ansible_host: 10.21.100.20
+    country3_location1:
+      children:
+        country3_location1_access1:
+          hosts:
+            country3_location1_f5_001:
+              ansible_host: 10.31.100.11
+            country3_location1_f5_002:
+              ansible_host: 10.31.100.12
+            country3_location1_f5_003:
+              ansible_host: 10.31.100.13
+            country3_location1_f5_004:
+              ansible_host: 10.31.100.14
+            country3_location1_f5_005:
+              ansible_host: 10.31.100.15
+            country3_location1_f5_006:
+              ansible_host: 10.31.100.16
+            country3_location1_f5_007:
+              ansible_host: 10.31.100.17
+            country3_location1_f5_008:
+              ansible_host: 10.31.100.18
+            country3_location1_f5_009:
+              ansible_host: 10.31.100.19
+        country3_location1_access2:
+          hosts:
+            country3_location1_f5_011:
+              ansible_host: 10.31.100.21
+            country3_location1_f5_012:
+              ansible_host: 10.31.100.22
+            country3_location1_f5_013:
+              ansible_host: 10.31.100.23
+            country3_location1_f5_014:
+              ansible_host: 10.31.100.24
+            country3_location1_f5_015:
+              ansible_host: 10.31.100.25
+            country3_location1_f5_016:
+              ansible_host: 10.31.100.26
+            country3_location1_f5_017:
+              ansible_host: 10.31.100.27
+            country3_location1_f5_018:
+              ansible_host: 10.31.100.28
+            country3_location1_f5_019:
+              ansible_host: 10.31.100.29

@@ -1,0 +1,11 @@
+---
+- name: Get failover state
+  bigip_device_info:
+      provider: "{{ provider }}"
+      gather_subset:
+          - devices
+  register: devices_result
+
+- name: Set failover_state fact
+  set_fact:
+      failover_state: "{{ devices_result | json_query('devices[?self==`yes`].failover_state') | json_query('[0]') }}"

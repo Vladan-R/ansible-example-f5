@@ -1,0 +1,12 @@
+---
+- name: Save the running configuration to disk
+  bigip_config:
+      provider: "{{ provider }}"
+      save: yes
+
+- name: Sync configuration from device to group
+  bigip_configsync_action:
+        provider: "{{ provider }}"
+        device_group: "{{ item }}"
+        sync_device_to_group: yes
+  loop: "{{ device_group_names }}"
